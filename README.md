@@ -1,1 +1,1 @@
-Visualizacion de imagenes dti y t1, probelemas con la normalizacion t1 
+Visualization of preprocessed RM img (dti and t1) of the brain.
