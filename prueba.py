@@ -13,127 +13,172 @@ from scipy.ndimage import measurements, center_of_mass, binary_dilation, zoom
 import plotly.graph_objects as go
 import numpy as np
 
-
-i=1
 tamanio= [0,0,0]
-brain_vol = nib.load('/home/jlagos/Desktop/felipers/f/f/wFELIPE_VALENZUELA.src.gz.dti.fib.gz.fa0.nii')
-print(type(brain_vol))
 
 
-brain_vol_dato = brain_vol.get_fdata()
-print(type(brain_vol_dato))
+folder_path = '/home/jlagos/Desktop/felipers/f/f'
+files = os.listdir(folder_path)
+text_files = [f for f in files if f.endswith('.nii')]
+                                             
+
+for text_file in text_files:
+    file_path = os.path.join(folder_path, text_file)
+    i=1
+
+    brain_vol = nib.load(file_path)
+    print(type(brain_vol))
 
 
-if isinstance(brain_vol_dato, np.memmap):
+    brain_vol_dato = brain_vol.get_fdata()
+    print(type(brain_vol_dato))
 
 
-    
-    print("Img dti")
+    if isinstance(brain_vol_dato, np.memmap):
 
 
-
-    np.sum(np.isnan(brain_vol_dato))
-
-    brain_vol_data = np.where(np.isnan(brain_vol_dato),0.0,brain_vol_dato)
-
-    num_imagenes = 79  
-    rows = 9  
-    cols = 9  
-
-    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Primer corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    fig, axes = plt.subplots(rows, cols, figsize=(30, 30))  
-
-    for i in range(num_imagenes):
-        ax = axes[i // cols, i % cols]  
-        np.where(np.isnan(brain_vol_data[i, :, :]), 0.0, brain_vol_data[i, :, :])
-        ax.imshow(brain_vol_data[i, :, :], cmap='gray') 
-        ax.axis('off')  
-
-    plt.tight_layout()  
-    plt.show()
+        
+        print("Img dti")
 
 
 
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Segundo corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        np.sum(np.isnan(brain_vol_dato))
 
-    fig, axes = plt.subplots(10, 10, figsize=(30, 30)) 
+        brain_vol_data = np.where(np.isnan(brain_vol_dato),0.0,brain_vol_dato)
 
-    for j in range(95):
-        ax = axes[j // 10, j % 10]
-        np.where(np.isnan(brain_vol_data[:, j, :]), 0.0, brain_vol_data[:, j, :])
-        ax.imshow(brain_vol_data[:, j, :], cmap='gray') 
-        ax.axis('off') 
+        num_imagenes = 79  
+        rows = 9  
+        cols = 9  
 
-    plt.tight_layout()  # Adjust spacing between subplots for better layout
-    plt.show()
+        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Primer corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Tercer corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        fig, axes = plt.subplots(rows, cols, figsize=(30, 30))
 
-    fig, axes = plt.subplots(rows, cols, figsize=(40, 40)) 
+        for i in range(num_imagenes):
+            ax = axes[i // cols, i % cols]  
+            np.where(np.isnan(brain_vol_data[i, :, :]), 0.0, brain_vol_data[i, :, :])
+            ax.imshow(brain_vol_data[i, :, :], cmap='gray') 
+            ax.axis('off') 
 
-    for k in range(num_imagenes):
-        ax = axes[k // cols, k % cols]
-        np.where(np.isnan(brain_vol_data[:, :, k]), 0.0, brain_vol_data[:, :, k])
-        ax.imshow(brain_vol_data[:, :, k], cmap='gray')
-        ax.axis('off')
+        for i in range(num_imagenes, rows * cols):
+            ax = axes[i // cols, i % cols]
+            ax.axis('off')
+            ax.set_visible(False)
 
-    plt.tight_layout()  
-    plt.show()
-
-#%%%%%%%%%%%%%%%%%%%%%%%%%%%Termino de img dti %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    
-
-else :
-
-
-    print("Img T1")
-    
-    num_imagenes = 79  
-    rows = 9  
-    cols = 9  
-    brain_vol_data = np.where(np.isnan(brain_vol_dato),0.0,brain_vol_dato)
-
-    #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Primer corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    fig, axes = plt.subplots(rows, cols, figsize=(30, 30))  
-
-    for i in range(num_imagenes):
-        ax = axes[i // cols, i % cols]  
-        np.where(np.isnan(brain_vol_data[i, :, :]), 0.0, brain_vol_data[i, :, :])
-        ax.imshow(brain_vol_data[i, :, :], cmap='gray') 
-        ax.axis('off')  
-
-    plt.tight_layout()  
-    plt.show()
+        plt.suptitle('DTI, Corte Axial', x=0.93, y=0.07, ha='right', fontsize=20)
+        plt.tight_layout()  
+        plt.show()
 
 
 
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%% Segundo corte %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Segundo corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    fig, axes = plt.subplots(10, 10, figsize=(30, 30)) 
+        fig, axes = plt.subplots(10, 10, figsize=(30, 30)) 
 
-    for j in range(95):
-        ax = axes[j // 10, j % 10]
-        np.where(np.isnan(brain_vol_data[:, j, :]), 0.0, brain_vol_data[:, j, :])
-        ax.imshow(brain_vol_data[:, j, :], cmap='gray') 
-        ax.axis('off') 
+        for j in range(95):
+            ax = axes[j // 10, j % 10]
+            np.where(np.isnan(brain_vol_data[:, j, :]), 0.0, brain_vol_data[:, j, :])
+            ax.imshow(brain_vol_data[:, j, :], cmap='gray') 
+            ax.axis('off') 
 
-    plt.tight_layout()  # Adjust spacing between subplots for better layout
-    plt.show()
+        for i in range(94, 10 * 10):
+            ax = axes[i // 10, i % 10]
+            ax.axis('off')
+            ax.set_visible(False)
 
-        #%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Tercer corte %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        plt.suptitle('DTI, Corte Longitudinal', x=0.92, y=0.07, ha='right', fontsize=20)
+        plt.tight_layout()  # Adjust spacing between subplots for better layout
+        plt.show()
 
-    fig, axes = plt.subplots(rows, cols, figsize=(40, 40)) 
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Tercer corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    for k in range(num_imagenes):
-        ax = axes[k // cols, k % cols]
-        np.where(np.isnan(brain_vol_data[:, :, k]), 0.0, brain_vol_data[:, :, k])
-        ax.imshow(brain_vol_data[:, :, k], cmap='gray')
-        ax.axis('off')
+        fig, axes = plt.subplots(rows, cols, figsize=(40, 40)) 
 
-    plt.tight_layout()  
-    plt.show()
+        for k in range(num_imagenes):
+            ax = axes[k // cols, k % cols]
+            np.where(np.isnan(brain_vol_data[:, :, k]), 0.0, brain_vol_data[:, :, k])
+            ax.imshow(brain_vol_data[:, :, k], cmap='gray')
+            ax.axis('off')
 
-# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Termino img T1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        for i in range(num_imagenes, rows * cols):
+            ax = axes[i // cols, i % cols]
+            ax.axis('off')
+            ax.set_visible(False)
+
+        plt.suptitle('DTI, Corte Longitudinal', x=0.94, y=0.07, ha='right', fontsize=20)
+        plt.tight_layout()  
+        plt.show()
+
+    #%%%%%%%%%%%%%%%%%%%%%%%%%%%Termino de img dti %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        
+
+    else :
+
+
+        print("Img T1")
+        
+        num_imagenes = 79  
+        rows = 9  
+        cols = 9  
+        brain_vol_data = np.where(np.isnan(brain_vol_dato),0.0,brain_vol_dato)
+
+                #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Primer corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        fig, axes = plt.subplots(rows, cols, figsize=(30, 30))
+
+        for i in range(num_imagenes):
+            ax = axes[i // cols, i % cols]  
+            np.where(np.isnan(brain_vol_data[i, :, :]), 0.0, brain_vol_data[i, :, :])
+            ax.imshow(brain_vol_data[i, :, :], cmap='gray') 
+            ax.axis('off') 
+
+        for i in range(num_imagenes, rows * cols):
+            ax = axes[i // cols, i % cols]
+            ax.axis('off')
+            ax.set_visible(False)
+
+        plt.suptitle('T1, Corte Axial', x=0.93, y=0.07, ha='right', fontsize=20)
+        plt.tight_layout()  
+        plt.show()
+
+
+
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Segundo corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        fig, axes = plt.subplots(10, 10, figsize=(30, 30)) 
+
+        for j in range(95):
+            ax = axes[j // 10, j % 10]
+            np.where(np.isnan(brain_vol_data[:, j, :]), 0.0, brain_vol_data[:, j, :])
+            ax.imshow(brain_vol_data[:, j, :], cmap='gray') 
+            ax.axis('off') 
+
+        for i in range(94, 10 * 10):
+            ax = axes[i // 10, i % 10]
+            ax.axis('off')
+            ax.set_visible(False)
+
+        plt.suptitle('T1, Corte Longitudinal', x=0.92, y=0.07, ha='right', fontsize=20)
+        plt.tight_layout()  # Adjust spacing between subplots for better layout
+        plt.show()
+
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%Tercer corte%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+        fig, axes = plt.subplots(rows, cols, figsize=(40, 40)) 
+
+        for k in range(num_imagenes):
+            ax = axes[k // cols, k % cols]
+            np.where(np.isnan(brain_vol_data[:, :, k]), 0.0, brain_vol_data[:, :, k])
+            ax.imshow(brain_vol_data[:, :, k], cmap='gray')
+            ax.axis('off')
+
+        for i in range(num_imagenes, rows * cols):
+            ax = axes[i // cols, i % cols]
+            ax.axis('off')
+            ax.set_visible(False)
+
+        plt.suptitle('T1, Corte Longitudinal', x=0.94, y=0.07, ha='right', fontsize=20)
+        plt.tight_layout()  
+        plt.show()
+
+    # %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Termino img T1 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
